@@ -1,0 +1,51 @@
+﻿<Window x:Class="ColorMixing.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:converters="clr-namespace:ColorMixing.Converters"
+        mc:Ignorable="d"
+        Title="Color mixing" Height="500" Width="825">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition />
+        </Grid.RowDefinitions>
+        <!-- Panel for reset button and statistics data -->
+        <StackPanel Grid.Row="0"
+                    Orientation="Horizontal"
+                    Margin="5,5,5,5">
+            <Button
+                    HorizontalAlignment="Left"
+                    VerticalAlignment="Center"
+                    Padding="5,0,5,0"
+                    Click="OnResetAllClick">Reset all</Button>
+            <TextBlock 
+                Margin="10, 0, 0, 0"
+                Text="{Binding CurrentObject,
+                Converter={converters:ObjectToStringConverter}}"/>
+            <TextBlock
+                Margin="10, 0, 0, 0"
+                Text="{Binding CurrentObjectStatistics}"/>
+        </StackPanel>
+
+        <!-- Canvas drawing area -->
+        <Canvas 
+                Grid.Row="1"
+                x:Name="canvas_Object"
+                Background="White"
+                MouseRightButtonDown="OnMouseRightButtonDown"
+                MouseLeftButtonDown="OnMouseLeftButtonDown"
+                MouseLeftButtonUp="OnMouseLeftButtonUp"
+                MouseMove="OnMouseMove">
+                <Canvas.ContextMenu>
+                    <ContextMenu Name="nodeContextMenu">
+                        <MenuItem IsCheckable="False" IsEnabled="{Binding IsCreateEnabled}" Header="Create object" Click="CreateMenuItemClick"/>
+                        <MenuItem IsCheckable="False" IsEnabled="{Binding IsColorEnabled}" Header="Set color" Click="SetColorMenuItemClick" />
+                        <MenuItem IsCheckable="False" IsEnabled="{Binding IsParentEnabled}" Header="Set parent" Click="SetParentMenuItemClick" />
+                        <MenuItem IsCheckable="False" IsEnabled="{Binding IsChildEnabled}" Header="Set child" Click="SetChildMenuItemClick" />
+                        </ContextMenu>
+                </Canvas.ContextMenu>
+            </Canvas>
+    </Grid>
+</Window>
