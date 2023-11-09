@@ -1,3 +1,6 @@
+<details>
+<summary>Expand for user interface description</summary>
+
 # User interface
 On application start user will see the empty list where is possible to create the objects using the context menu:
 <br><br>
@@ -60,10 +63,70 @@ You always can see the statistics for the selected node by pressing the left mou
 <br><br>
 The usability of application was improved with drag and drop function available for any object (drag using left mouse click). The connection lines will be automatically updated in a real time. See the same configuration of nodes below:
 <br><br>
-<src="https://github.com/antonchertousov/ColorMixer/assets/121962913/9af7b5e8-38a4-42d3-ab17-42c0bf6b7c9b" width="600">
+<img src="https://github.com/antonchertousov/ColorMixer/assets/121962913/9af7b5e8-38a4-42d3-ab17-42c0bf6b7c9b" width="600">
 <br><br>
 The ‘Reset all’ button removes all the objects and connection lines from the drawing area.
 <br><br>
+</details>
 
+<details>
+<summary>Expand for technical part description</summary>
 
+## Description
+The application made with  .NET 4.8.1 and WPF components also using these external libraries:
+-	WPF.ColorPicker v.5.0.0.1 (color picked component)
+-	Mixbox v.2.0.0 (helper library for colors mixing)
 
+Both components are downloaded as nuget packages.
+Also, for arrow lines the code example from Charles Petzold © 2007 was used.
+
+## Principles and considerations
+Since the application doesn’t require multiple windows or complex models the one window with code behind approach was used. All xaml markup is located in MainWindow.xaml file and the interaction logic including handling of mouse, buttons and menu events are in the MainWindow.xaml.cs file.
+Additional helpers for color mixing, lines drawing and recalculations for the drag-n-drop are in the ‘Helpers’ folder respectectively.
+Property changed support was added to update the bindings in the xaml file.
+
+## Data classes
+The general idea of managing the objects and their relation is described below:
+<img src="https://github.com/antonchertousov/ColorMixer/assets/121962913/4ac66f59-ca22-4479-8f58-02b040495f21">
+<br><br>
+The only one data class is used: Connection. The collection of ‘Connection’ objects contains the information about parent, child and their relation line identifiers. The parent and child objects have type of Ellipse, connection line type of ArrowLine.
+Each time the new object created (Ellipse) it is added to the Canvas collection. To identify the object exactly the ‘Tag’ field contains the unique identifier.
+Each time the parent-child relation is defined the new ‘ArrowLine’ object is created and added to the canvas collection. At the same time the new ‘Connection’ object is added to connections collection.
+
+The ‘Connections’ collection allows to create the node structure and update the colors of child objects based on the parent colors. The diagram for the color update is described below (see implementation in UpdateChildColorsOnParentChange method):
+<img src="https://github.com/antonchertousov/ColorMixer/assets/121962913/742a811d-ef72-45f4-b6a3-f785a3d88c77" width="600">
+<br><br>
+
+## The code region’s structure
+To make the MainWindow.xaml.cs file more readable it was structured with the following self describing regions:
+-	Private fields
+-	Public properties
+-	Mouse and button click actions
+-	Context menu handling methods
+-	Creating, moving objects and drawing connections
+-	Colors mixing
+-	Statistics
+-	Public methods
+-	Property changed support
+
+## Building the app
+If you want to build and run the application using the provided code the best option is to open the solution file in IDE like JB Rider or Microsoft Visual Studio, download Nuget packages using packages.config file and build the project:
+<img src="https://github.com/antonchertousov/ColorMixer/assets/121962913/2931cbcd-4e5e-49b2-af1c-13c88532be71">
+<br><br>
+Then you can run it in debug or release configuration.
+
+## Ideas for further development
+The list of the features to implement is described below:
+
+-	Improve selected object visibility (dotted line, or some other border type)
+-	Implement deletion for the selected objects
+-	Implement deletion for object relations (parent-child lines)
+-	Implement/prevent circular references for the sets of objects
+-	Improve UX for the context menu items (or use another approach to work with objects)
+-	From the prevous item: show the color picker as side panel instead of separate window
+-	Implement undo operations
+-	Implement another color mixing approaches
+-	Implement interactive object size change (for all or for separate)
+-	Implement other types of objects to show (rectangle for example, or custom objects)
+-	Save/load object configuration to the file
+</details>
